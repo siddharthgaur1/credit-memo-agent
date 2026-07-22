@@ -1,0 +1,34 @@
+# Ollama is a HOST dependency, not a service here: it wants your GPU/CPU and its
+# model cache lives in your home directory. Install it from https://ollama.com,
+# run `ollama serve` and `ollama pull llama3.1:8b`, then `docker compose up`.
+#
+# Ports bind to 127.0.0.1 deliberately. This handles borrower documents; it has
+# no business listening on your network interface.
+
+services:
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:8b}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
+      DATA_DIR: /app/data/local
+    volumes:
+      - ./data/local:/app/data/local
+      - ./config:/app/config          # edit checklists/thresholds without rebuilding
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  dashboard:
+    build: .
+    command: streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      - api

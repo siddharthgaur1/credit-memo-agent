@@ -1,0 +1,73 @@
+# Required-document checklist for a business instalment loan.
+#
+# THIS IS A STARTING TEMPLATE, NOT AUTHORITY. Edit it to match your bank's
+# actual credit policy -- no code change is needed. Each item:
+#
+#   id            unique key
+#   label         what a credit officer calls it
+#   doc_type      matches src/ingest/classify.py DocType values
+#   min_count     how many distinct documents of this type are required
+#   max_age_days  a document older than this is "present but stale" (omit = never stale)
+#   mandatory     false => absence is reported as a note, not a gap
+#   note          shown alongside the result
+
+name: Business Instalment Loan
+version: 1
+items:
+  - id: audited_financials
+    label: Audited financial statements (balance sheet), last 2 FYs
+    doc_type: balance_sheet
+    min_count: 2
+    max_age_days: 550          # ~18 months: FY-end + audit lag
+    mandatory: true
+    note: Signed/audited copies required; provisionals need a separate approval.
+
+  - id: profit_and_loss
+    label: Profit & loss statement, last 2 FYs
+    doc_type: profit_and_loss
+    min_count: 2
+    max_age_days: 550
+    mandatory: true
+
+  - id: itr
+    label: Income tax return, latest AY
+    doc_type: itr
+    min_count: 1
+    max_age_days: 550
+    mandatory: true
+
+  - id: gst_returns
+    label: GST returns (GSTR-3B), last 12 months
+    doc_type: gst_return
+    min_count: 4
+    max_age_days: 120
+    mandatory: true
+    note: Quarterly filers may satisfy this with 4 filings.
+
+  - id: bank_statements
+    label: Bank statements, last 12 months (all operative accounts)
+    doc_type: bank_statement
+    min_count: 1
+    max_age_days: 90
+    mandatory: true
+
+  - id: kyc
+    label: KYC -- PAN, constitution proof, address proof
+    doc_type: kyc
+    min_count: 1
+    mandatory: true
+
+  - id: project_report
+    label: Project report / quotation for the asset being financed
+    doc_type: project_report
+    min_count: 1
+    max_age_days: 180
+    mandatory: true
+    note: Quotation older than 6 months usually needs revalidation.
+
+  - id: existing_sanctions
+    label: Sanction letters for existing facilities
+    doc_type: sanction_letter
+    min_count: 1
+    mandatory: false
+    note: Not applicable to a first-time borrower -- confirm with the RM.

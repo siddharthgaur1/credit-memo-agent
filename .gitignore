@@ -1,0 +1,32 @@
+# --- Borrower data firewall: real files must be impossible to commit by accident ---
+cases/
+uploads/
+data/local/
+*.pdf
+*.xlsx
+*.xls
+*.csv
+*.db
+*.sqlite
+*.sqlite3
+*.docx
+
+# sample_data is SYNTHETIC and generated on demand -- never commit binaries from it
+sample_data/out/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# --- Secrets / env ---
+.env
+.env.*
+!.env.example
+
+# --- LLM call logs (may echo document content) ---
+logs/

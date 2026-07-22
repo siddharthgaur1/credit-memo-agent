@@ -1,0 +1,136 @@
+# Risk rules. Thresholds are policy, not code -- edit them here.
+#
+# Three rule types:
+#   ratio_threshold  -- compare a computed ratio in a period against a threshold
+#   figure_threshold -- compare a raw extracted figure against a threshold
+#   trend_direction  -- fire when a metric moves the wrong way by enough
+#
+# operator: lt | lte | gt | gte
+# period:   latest | any   (ratio_threshold / figure_threshold only)
+# severity: low | medium | high
+
+version: 1
+rules:
+  - id: dscr_thin
+    type: ratio_threshold
+    metric: DSCR
+    operator: lt
+    threshold: 1.25
+    period: latest
+    severity: high
+    label: DSCR below policy minimum
+    message: >-
+      Debt service coverage of {value} is below the {threshold}x minimum. Cash accruals
+      leave little headroom over the repayment obligation.
+
+  - id: interest_cover_thin
+    type: ratio_threshold
+    metric: Interest coverage
+    operator: lt
+    threshold: 2.0
+    period: latest
+    severity: medium
+    label: Thin interest coverage
+    message: Interest coverage of {value} is below {threshold}x.
+
+  - id: negative_net_worth
+    type: figure_threshold
+    figure: net_worth
+    operator: lte
+    threshold: 0
+    period: latest
+    severity: high
+    label: Negative or nil net worth
+    message: >-
+      Net worth is {value}. Accumulated losses have eroded the owners' stake; the
+      lender would be funding a business with no residual equity cushion.
+
+  - id: high_leverage
+    type: ratio_threshold
+    metric: TOL / TNW
+    operator: gt
+    threshold: 4.0
+    period: latest
+    severity: high
+    label: High total leverage
+    message: TOL/TNW of {value} exceeds the {threshold}x ceiling.
+
+  - id: debt_equity_high
+    type: ratio_threshold
+    metric: Debt / equity
+    operator: gt
+    threshold: 3.0
+    period: latest
+    severity: medium
+    label: High debt-to-equity
+    message: Debt to equity of {value} exceeds {threshold}x.
+
+  - id: current_ratio_low
+    type: ratio_threshold
+    metric: Current ratio
+    operator: lt
+    threshold: 1.2
+    period: latest
+    severity: medium
+    label: Weak current ratio
+    message: Current ratio of {value} is below {threshold}x -- short-term obligations are tightly covered.
+
+  - id: revenue_declining
+    type: trend_direction
+    metric: Revenue
+    direction: down
+    min_change_pct: 10
+    severity: high
+    label: Declining revenue
+    message: Revenue fell {change_pct} across the periods reviewed ({series}).
+
+  - id: margin_compression
+    type: trend_direction
+    metric: Net margin
+    direction: down
+    min_change_pct: 20
+    severity: medium
+    label: Margin compression
+    message: Net margin declined {change_pct} across the periods reviewed ({series}).
+
+  - id: wc_cycle_stretched
+    type: ratio_threshold
+    metric: Working capital cycle
+    operator: gt
+    threshold: 120
+    period: latest
+    severity: medium
+    label: Stretched working capital cycle
+    message: Working capital cycle of {value} exceeds {threshold} days.
+
+  - id: receivables_stretched
+    type: ratio_threshold
+    metric: Receivable days
+    operator: gt
+    threshold: 90
+    period: latest
+    severity: low
+    label: Stretched receivables
+    message: Receivable days of {value} exceed {threshold} days.
+
+  - id: cheque_returns
+    type: ratio_threshold
+    metric: Inward cheque returns
+    operator: gt
+    threshold: 0
+    period: any
+    severity: high
+    label: Cheque/mandate returns in bank conduct
+    message: >-
+      {value} of the borrower's own cheques or mandates were returned unpaid in the
+      statement period. Conduct is a direct read on repayment discipline.
+
+  - id: limit_overutilised
+    type: ratio_threshold
+    metric: Peak limit utilisation
+    operator: gt
+    threshold: 95
+    period: any
+    severity: medium
+    label: Existing limits fully utilised
+    message: Peak utilisation of {value} indicates the existing limit is fully drawn.
