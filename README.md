@@ -1,5 +1,35 @@
 # Credit Memo Agent
 
+**Drafts a business-loan credit memo from borrower documents — extraction cited, ratios computed in code, and by default nothing leaves your machine.**
+
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/) [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE) [![Runs 100% local](https://img.shields.io/badge/runs-100%25%20local%20(Ollama)-brightgreen)](#run-with-zero-paid-keys)
+
+> **Live demo:** not hosted — this processes financial documents and defaults to a
+> **fully local** model precisely so document contents never leave the machine.
+> Hosting it publicly would defeat that. It runs free locally on Ollama — below.
+
+## Run with zero paid keys
+
+```bash
+git clone https://github.com/siddharthgaur1/credit-memo-agent
+cd credit-memo-agent
+pip install -r requirements.txt
+
+# install https://ollama.com, then:
+ollama pull llama3.1:8b
+cp .env.example .env          # LLM_BACKEND=ollama is already the default
+
+uvicorn src.api.main:app --reload      # or: streamlit run dashboard/app.py
+```
+
+Nothing about the borrower leaves the machine: a local Ollama model does the
+extraction, credit ratios are computed deterministically **in Python** (not by the
+LLM), and the `.docx` is written locally. The OpenAI backend is opt-in and, per
+`.env.example`, for synthetic data only — setting a key does **not** switch to it.
+Data-locality design and full threat model: [SECURITY.md](SECURITY.md).
+
+---
+
 Drafts a business instalment loan credit memo from a borrower's document file:
 validates which required documents are present, extracts the financials into a
 typed schema with per-figure citations, computes the credit ratios
