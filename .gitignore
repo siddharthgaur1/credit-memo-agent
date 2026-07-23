@@ -30,3 +30,8 @@ venv/
 
 # --- LLM call logs (may echo document content) ---
 logs/
+.serena/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.DS_Store
