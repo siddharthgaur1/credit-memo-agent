@@ -29,6 +29,7 @@ class Settings(BaseModel):
     ollama_model: str = "llama3.1:8b"
 
     openai_api_key: str | None = None
+    openai_base_url: str | None = None  # OpenAI-compatible endpoint; None = OpenAI
     openai_model: str = "gpt-4o"
 
     data_dir: Path = ROOT / "data" / "local"
@@ -55,6 +56,7 @@ def get_settings() -> Settings:
         ollama_host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
         ollama_model=os.getenv("OLLAMA_MODEL", "llama3.1:8b"),
         openai_api_key=os.getenv("OPENAI_API_KEY") or None,
+        openai_base_url=os.getenv("OPENAI_BASE_URL") or None,
         openai_model=os.getenv("OPENAI_MODEL", "gpt-4o"),
         data_dir=Path(os.getenv("DATA_DIR", str(ROOT / "data" / "local"))),
     )

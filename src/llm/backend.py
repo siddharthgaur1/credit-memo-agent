@@ -130,7 +130,13 @@ class OpenAIBackend(LLMBackend):
             raise BackendUnavailable("LLM_BACKEND=openai but OPENAI_API_KEY is not set.")
         from openai import OpenAI
 
-        self._client = OpenAI(api_key=self.settings.openai_api_key)
+        # base_url lets an OpenAI-compatible endpoint stand in. Note: this backend
+        # uses structured parsing (`beta.chat.completions.parse`); a substitute must
+        # support it. The zero-cost path is the default Ollama backend, not this one.
+        self._client = OpenAI(
+            api_key=self.settings.openai_api_key,
+            base_url=self.settings.openai_base_url,
+        )
 
     def _raw_complete(self, prompt: str, schema: type[BaseModel]) -> tuple[str, dict]:
         completion = self._client.beta.chat.completions.parse(
