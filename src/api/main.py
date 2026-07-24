@@ -21,6 +21,7 @@ from ..persistence.store import Store, to_record
 from ..qa import ask
 
 logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 settings = get_settings()
 app = FastAPI(title="Credit Memo Agent", version="0.1.0")
@@ -90,7 +91,7 @@ def _process(case_id: str, files: list[Path], borrower: str | None, facility: st
         store.save(to_record(state, backend.name))
         _running[case_id] = "done"
     except Exception as exc:  # surfaced verbatim -- a silent failure is worse
-        logging.exception("case %s failed", case_id)
+        log.exception("case %s failed", case_id)
         _running[case_id] = f"failed: {exc}"
 
 

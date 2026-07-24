@@ -23,7 +23,6 @@ from .schemas import (
     DebtService,
     ExtractedFinancials,
     Figure,
-    Period,
     ProfitAndLoss,
 )
 
@@ -166,7 +165,7 @@ def extract_documents(
                 fin.bank_statements.append(bsum)
             else:
                 continue
-        except Exception as exc:  # extraction failed -- escalate, don't guess
+        except Exception as exc:  # noqa: BLE001 - extraction failed -- escalate, don't guess
             escalations.append(f"{doc.filename}: extraction failed ({exc}). Human review required.")
             continue
         rejected.extend(f"{doc.filename} -> {r}" for r in rej)

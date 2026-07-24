@@ -30,7 +30,7 @@ class Citation(BaseModel):
         return v.strip()
 
     @model_validator(mode="after")
-    def _needs_a_location(self) -> "Citation":
+    def _needs_a_location(self) -> Citation:
         if self.page is None and self.sheet is None:
             raise ValueError("citation requires a page number or a sheet name")
         return self

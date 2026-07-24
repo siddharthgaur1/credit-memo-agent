@@ -19,7 +19,7 @@ from ..analysis.ratios import Completeness, compute_all
 from ..analysis.risk import RiskFlag, evaluate_risk, load_rules
 from ..checklist.validate import SubmittedDoc, load_checklist, validate
 from ..config import Settings, get_settings
-from ..extract.extractor import extract_documents, statement_date
+from ..extract.extractor import extract_documents
 from ..extract.verify import Severity, verify_financials
 from ..ingest.classify import DocType, classify
 from ..ingest.parsers import ScannedPDFError, parse_file
@@ -117,7 +117,7 @@ def intake_agent(state: CaseState) -> CaseState:
         except ScannedPDFError as exc:
             escalations.append(str(exc))
             continue
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - an unreadable doc is escalated, not fatal
             escalations.append(f"{path.name}: could not be read ({exc}).")
             continue
 
@@ -199,9 +199,9 @@ def extraction_agent(state: CaseState) -> CaseState:
         "verification": findings,
         "escalations": escalations,
         "progress": [
-            f"Extraction: {len(outcome.financials.balance_sheets)} balance sheet(s), "
+            (f"Extraction: {len(outcome.financials.balance_sheets)} balance sheet(s), "
             f"{len(outcome.financials.profit_and_loss)} P&L(s), "
-            f"{len(findings)} verification finding(s)."
+            f"{len(findings)} verification finding(s).")
         ],
     }
 
@@ -243,7 +243,7 @@ def risk_narrative_agent(state: CaseState) -> CaseState:
             "trend_commentary": narrative.trend_commentary,
             "progress": ["Narrative: drafted."],
         }
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         # Prose is the only thing the LLM owns here, so losing it degrades the
         # memo rather than invalidating it. Fall back to the raw evidence.
         log.warning("narrative generation failed: %s", exc)
@@ -320,9 +320,9 @@ def human_escalation(state: CaseState) -> CaseState:
     """
     report = state.get("checklist_report")
     questions = [
-        "No balance sheet or profit & loss statement could be extracted from this file, "
+        ("No balance sheet or profit & loss statement could be extracted from this file, "
         "so no ratio can be computed. Please confirm which submitted file contains the "
-        "audited financials, or supply them."
+        "audited financials, or supply them.")
     ]
     if report is not None:
         questions += [f"Still outstanding: {r.label} -- {r.reason}" for r in report.gaps]

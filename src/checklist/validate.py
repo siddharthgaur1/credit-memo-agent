@@ -6,7 +6,7 @@ the gap list alone is most of the day-one value.
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 
@@ -77,7 +77,7 @@ def validate(
     submitted: list[SubmittedDoc],
     today: date | None = None,
 ) -> ChecklistReport:
-    today = today or date.today()
+    today = today or datetime.now(timezone.utc).date()
     results: list[ChecklistItemResult] = []
 
     for item in checklist.items:

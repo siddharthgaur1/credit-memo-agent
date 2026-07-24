@@ -7,7 +7,12 @@ from .schemas import (
     ProfitAndLoss,
     val,
 )
-from .verify import VerificationFinding, verify_balance_sheet, verify_financials, verify_pnl
+from .verify import (
+    VerificationFinding,
+    verify_balance_sheet,
+    verify_financials,
+    verify_pnl,
+)
 
 __all__ = [
     "BalanceSheet",
@@ -16,8 +21,8 @@ __all__ = [
     "ExtractedFinancials",
     "Figure",
     "ProfitAndLoss",
-    "val",
     "VerificationFinding",
+    "val",
     "verify_balance_sheet",
     "verify_financials",
     "verify_pnl",

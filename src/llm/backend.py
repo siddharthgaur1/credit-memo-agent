@@ -12,7 +12,6 @@ import json
 import logging
 import time
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import TypeVar
 
 import httpx
@@ -59,7 +58,7 @@ class LLMBackend(abc.ABC):
                 last = exc
                 log.warning("%s: invalid structured output (attempt %d): %s", self.name, attempt, exc)
                 prompt = f"{prompt}\n\nYour previous reply did not match the schema ({exc}). Reply with valid JSON only."
-            except Exception as exc:  # network / transient
+            except Exception as exc:  # noqa: BLE001 - network / transient
                 last = exc
                 log.warning("%s: call failed (attempt %d): %s", self.name, attempt, exc)
             else:

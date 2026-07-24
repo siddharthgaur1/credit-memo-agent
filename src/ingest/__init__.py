@@ -1,13 +1,20 @@
-from .parsers import ParsedDoc, Page, ScannedPDFError, parse_file, parse_pdf, parse_tabular
 from .classify import DocType, classify
+from .parsers import (
+    Page,
+    ParsedDoc,
+    ScannedPDFError,
+    parse_file,
+    parse_pdf,
+    parse_tabular,
+)
 
 __all__ = [
-    "ParsedDoc",
+    "DocType",
     "Page",
+    "ParsedDoc",
     "ScannedPDFError",
+    "classify",
     "parse_file",
     "parse_pdf",
     "parse_tabular",
-    "DocType",
-    "classify",
 ]

@@ -131,7 +131,7 @@ def parse_tabular(path: Path) -> ParsedDoc:
 
 
 MONTHS = {m.lower(): i for i, m in enumerate(calendar.month_abbr) if m}
-_MONTH_YEAR = re.compile(r"\b(" + "|".join(MONTHS) + r")[a-z]*\.?\s+(\d{4})\b", re.I)
+_MONTH_YEAR = re.compile(r"\b(" + "|".join(MONTHS) + r")[a-z]*\.?\s+(\d{4})\b", re.IGNORECASE)
 _DMY = re.compile(r"\b(\d{1,2})[-/](\d{1,2})[-/](\d{4})\b")
 
 

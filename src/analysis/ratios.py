@@ -114,7 +114,7 @@ def compute_period(fin: ExtractedFinancials, fy: str) -> list[RatioResult]:
     ds = fin.debt_for(fy)
     out: list[RatioResult] = []
 
-    g = lambda obj, attr: None if obj is None else val(getattr(obj, attr))  # noqa: E731
+    g = lambda obj, attr: None if obj is None else val(getattr(obj, attr))
 
     revenue = g(pl, "revenue")
     cogs = g(pl, "cost_of_goods_sold")
@@ -451,7 +451,7 @@ class AnalysisResult(BaseModel):
         return next((r for r in self.by_period.get(period, []) if r.name == name), None)
 
     def latest_period(self) -> str | None:
-        return sorted(self.by_period)[-1] if self.by_period else None
+        return max(self.by_period) if self.by_period else None
 
 
 def compute_all(fin: ExtractedFinancials) -> AnalysisResult:

@@ -8,14 +8,14 @@ survives an audit.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from pydantic import BaseModel, Field
 
 from ..analysis.ratios import AnalysisResult, Completeness
 from ..analysis.risk import RiskFlag
-from ..checklist.validate import ChecklistReport, Status
+from ..checklist.validate import ChecklistReport
 from ..extract.schemas import ExtractedFinancials, Figure, val
 from ..extract.verify import VerificationFinding
 
@@ -235,7 +235,7 @@ def build_memo(
     return CreditMemo(
         borrower_name=fin.borrower_name or "Borrower name not established",
         facility_requested=fin.facility_requested or "Facility not stated in the submitted documents",
-        prepared_on=date.today(),
+        prepared_on=datetime.now(timezone.utc).date(),
         backend=backend,
         sections=sections,
         citations=_citations(fin),
